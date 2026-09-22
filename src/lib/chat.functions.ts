@@ -197,12 +197,22 @@ export const sendChatMessage = createServerFn({ method: "POST" })
       if (name === "update_task") {
         const task = findTask(String(args["task_title"]));
         if (!task) return `No task matching "${args["task_title"]}".`;
-        const patch: Record<string, unknown> = {};
-        if (args["new_title"]) patch["title"] = args["new_title"];
-        if (args["description"] !== undefined) patch["description"] = args["description"];
-        if (args["due_date"] !== undefined) patch["due_date"] = args["due_date"];
-        if (args["priority"]) patch["priority"] = args["priority"];
-        if (args["completed"] !== undefined) patch["completed"] = args["completed"];
+        const patch: {
+          title?: string;
+          description?: string | null;
+          due_date?: string | null;
+          priority?: string;
+          completed?: boolean;
+          column_id?: string;
+          position?: number;
+        } = {};
+        if (args["new_title"]) patch.title = String(args["new_title"]);
+        if (args["description"] !== undefined)
+          patch.description = args["description"] === null ? null : String(args["description"]);
+        if (args["due_date"] !== undefined)
+          patch.due_date = args["due_date"] ? String(args["due_date"]) : null;
+        if (args["priority"]) patch.priority = String(args["priority"]);
+        if (args["completed"] !== undefined) patch.completed = Boolean(args["completed"]);
         if (args["column"]) {
           const column = findColumn(String(args["column"]));
           if (!column) return `No column named "${args["column"]}".`;

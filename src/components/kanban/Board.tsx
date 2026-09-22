@@ -151,7 +151,7 @@ export function Board({ boardId, boardName, data, onChanged }: Props) {
     if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
       const reordered = arrayMove(inColumn, oldIndex, newIndex);
       next = tasks.map((t) => {
-        const idx = reordered.findIndex((r) => r.id === t.id);
+        const idx = reordered.findIndex((r: Task) => r.id === t.id);
         return idx === -1 ? t : { ...t, position: idx };
       });
     } else {
