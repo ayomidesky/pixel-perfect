@@ -197,7 +197,15 @@ export const sendChatMessage = createServerFn({ method: "POST" })
       if (name === "update_task") {
         const task = findTask(String(args["task_title"]));
         if (!task) return `No task matching "${args["task_title"]}".`;
-        const patch: Record<string, unknown> = {};
+        const patch: {
+          title?: string;
+          description?: string | null;
+          due_date?: string | null;
+          priority?: string;
+          completed?: boolean;
+          column_id?: string;
+          position?: number;
+        } = {};
         if (args["new_title"]) patch["title"] = args["new_title"];
         if (args["description"] !== undefined) patch["description"] = args["description"];
         if (args["due_date"] !== undefined) patch["due_date"] = args["due_date"];
