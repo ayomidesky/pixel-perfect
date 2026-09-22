@@ -98,7 +98,17 @@ export function ChatPanel({ boardId, onBoardChanged }: Props) {
                 : "bg-secondary text-secondary-foreground",
             )}
           >
-            {m.content}
+            {m.content.split("\n").map((line, i) => (
+              <p key={i} className={i > 0 ? "mt-1" : undefined}>
+                {line.split(/(\*\*[^*]+\*\*)/g).map((part, j) =>
+                  part.startsWith("**") && part.endsWith("**") ? (
+                    <strong key={j}>{part.slice(2, -2)}</strong>
+                  ) : (
+                    <span key={j}>{part.replace(/\*/g, "")}</span>
+                  ),
+                )}
+              </p>
+            ))}
           </div>
         ))}
         {busy && <div className="text-sm text-muted-foreground">Thinking…</div>}
